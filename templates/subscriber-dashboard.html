@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriber Dashboard | Allocare</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/subscriber-dashboard.css') }}">
+</head>
+
+<body>
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+    <input type="checkbox" id="sidebar-toggle">
+    <label for="sidebar-toggle" class="sidebar-toggle-label">☰</label>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-mark" aria-hidden="true">
+                    <img src="{{ url_for('static', filename='img/logo-allocare.png') }}" alt="Allocare logo">
+                </div>
+                <div>
+                    <p class="eyebrow">Allocare</p>
+                    <p class="sidebar-subtitle">Real-time resource allocation.</p>
+                    <h3>Subscriber</h3>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('subscriber_dashboard') }}"
+                    class="nav-link {% if request.endpoint == 'subscriber_dashboard' %}active{% endif %}">
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="{{ url_for('subscriber_alerts') }}"
+                    class="nav-link {% if request.endpoint == 'subscriber_alerts' %}active{% endif %}">
+                    <span class="nav-label">Alerts</span>
+                </a>
+                <a href="{{ url_for('subscriber_history') }}"
+                    class="nav-link {% if request.endpoint == 'subscriber_history' %}active{% endif %}">
+                    <span class="nav-label">Event History</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <form method="post" action="{{ url_for('subscriber_logout') }}">
+                    <button type="submit" class="logout-btn">
+                        <span class="nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                        </span>
+                        <span class="nav-label">Log Out</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="notice notice-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class="page-container">
+                <section class="hero-card">
+                    <div>
+                        <p class="eyebrow">Consumed Events Analytics</p>
+                        <h1>Event Monitoring Dashboard</h1>
+                        <p class="page-subtitle">Real-time view of all consumed events.</p>
+                    </div>
+                    <div class="hero-meta">
+                        <span class="meta-label">Total Events Consumed</span>
+                        <strong>{{ total_events }}</strong>
+                    </div>
+                </section>
+
+                <section class="stats-grid">
+                    <article class="stat-card stat-accent">
+                        <span class="stat-label">Patient Admissions</span>
+                        <strong class="stat-value">{{ event_type_counts.get('patient.admission', 0) }}</strong>
+                    </article>
+                    <article class="stat-card">
+                        <span class="stat-label">Bed Updates</span>
+                        <strong class="stat-value">{{ event_type_counts.get('bed.update', 0) }}</strong>
+                    </article>
+                    <article class="stat-card">
+                        <span class="stat-label">Capacity Changes</span>
+                        <strong class="stat-value">{{ event_type_counts.get('bed.capacity', 0) }}</strong>
+                    </article>
+                    <article class="stat-card">
+                        <span class="stat-label">Doctor Registrations</span>
+                        <strong class="stat-value">{{ event_type_counts.get('doctor.registration', 0) }}</strong>
+                    </article>
+                </section>
+
+                <section class="panel activity-panel">
+                    <div class="panel-header">
+                        <h2>Recent Events</h2>
+                        <p>Latest consumed events.</p>
+                    </div>
+                    <div class="activity-list">
+                        {% for event in recent_events %}
+                        <article class="activity-item">
+                            <div>
+                                <strong>{{ event.event_type }}</strong>
+                                <p>Queue: {{ event.queue_name }}</p>
+                            </div>
+                            <time>{{ event.consumed_at }}</time>
+                        </article>
+                        {% else %}
+                        <p class="empty-state">No events consumed yet.</p>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

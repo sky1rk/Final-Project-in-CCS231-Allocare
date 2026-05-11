@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Allocare{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="auth-page">
+    <main class="page-shell">
+        <section class="brand-panel">
+            <div class="brand-glow"></div>
+            <div class="grain"></div>
+            <div class="brand-copy">
+                <div class="eyebrow-row">
+                    <img class="brand-logo-inline" src="{{ url_for('static', filename='img/logo-allocare.png') }}" alt="Allocare logo">
+                    <p class="eyebrow">{% block hero_eyebrow %}Allocare{% endblock %}</p>
+                </div>
+                <h1>{% block hero_title %}Real-time resource allocation.{% endblock %}</h1>
+                <p class="hero-text">{% block hero_text %}Publish healthcare events and critical alerts on capacity, admissions, and staffing.{% endblock %}</p>
+            </div>
+            <div class="brand-art" aria-hidden="true">
+                <span class="art-spiral" aria-hidden="true"></span>
+                <span class="art-ring art-ring-large"></span>
+                <span class="art-ring art-ring-medium"></span>
+                <span class="art-ring art-ring-small"></span>
+                <span class="art-core"></span>
+                <span class="art-line art-line-a"></span>
+                <span class="art-line art-line-b"></span>
+                <span class="art-line art-line-c"></span>
+                <span class="art-node art-node-a"></span>
+                <span class="art-node art-node-b"></span>
+                <span class="art-node art-node-c"></span>
+                <span class="art-node art-node-d"></span>
+            </div>
+        </section>
+        <section class="form-panel">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="notice notice-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </section>
+    </main>
+        <script>
+            document.querySelectorAll('[data-toggle-password]').forEach((button) => {
+                const targetId = button.getAttribute('data-target');
+                const input = targetId ? document.getElementById(targetId) : null;
+
+                if (!input) {
+                    return;
+                }
+
+                button.addEventListener('click', () => {
+                    const isHidden = input.type === 'password';
+                    input.type = isHidden ? 'text' : 'password';
+                    button.classList.toggle('is-visible', isHidden);
+                    button.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+                });
+            });
+        </script>
+</body>
+</html>

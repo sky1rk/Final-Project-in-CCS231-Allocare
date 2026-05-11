@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event History | Allocare Subscriber</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/subscriber-history.css') }}">
+</head>
+
+<body>
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom-dropdowns.js') }}"></script>
+    <input type="checkbox" id="sidebar-toggle">
+    <label for="sidebar-toggle" class="sidebar-toggle-label">☰</label>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-mark" aria-hidden="true">
+                    <img src="{{ url_for('static', filename='img/logo-allocare.png') }}" alt="Allocare logo">
+                </div>
+                <div>
+                    <p class="eyebrow">Allocare</p>
+                    <p class="sidebar-subtitle">Real-time resource allocation.</p>
+                    <h3>Subscriber</h3>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('subscriber_dashboard') }}"
+                    class="nav-link {% if request.endpoint == 'subscriber_dashboard' %}active{% endif %}">
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="{{ url_for('subscriber_alerts') }}"
+                    class="nav-link {% if request.endpoint == 'subscriber_alerts' %}active{% endif %}">
+                    <span class="nav-label">Alerts</span>
+                </a>
+                <a href="{{ url_for('subscriber_history') }}"
+                    class="nav-link {% if request.endpoint == 'subscriber_history' %}active{% endif %}">
+                    <span class="nav-label">Event History</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <form method="post" action="{{ url_for('subscriber_logout') }}">
+                    <button type="submit" class="logout-btn">
+                        <span class="nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                        </span>
+                        <span class="nav-label">Log Out</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="notice notice-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class="page-container">
+                <section class="hero-card">
+                    <div>
+                        <p class="eyebrow">Complete Event Records</p>
+                        <h1>Event History & Log</h1>
+                        <p class="page-subtitle">Browse all consumed events with topic filtering.</p>
+                    </div>
+                </section>
+
+                <section class="filter-section">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2>Filter Events</h2>
+                        </div>
+                        <form method="get" class="filter-form">
+                            <div class="filter-group">
+                                <label for="queue_filter">Queue/Topic</label>
+                                <select id="queue_filter" name="queue" class="filter-select">
+                                    <option value="">All Queues</option>
+                                    {% for q in queues %}
+                                    <option value="{{ q }}" {% if current_queue_filter==q %}selected{% endif %}>{{ q }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label for="type_filter">Event Type</label>
+                                <select id="type_filter" name="type" class="filter-select">
+                                    <option value="">All Types</option>
+                                    {% for t in event_types %}
+                                    <option value="{{ t }}" {% if current_type_filter==t %}selected{% endif %}>{{ t }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn-filter">Apply Filters</button>
+                            <a href="{{ url_for('subscriber_history') }}" class="btn-reset">Reset</a>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="events-table-section">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2>Event Log</h2>
+                            <p>Messages with at-least-once delivery guarantee and persistent storage</p>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="events-table">
+                                <thead>
+                                    <tr>
+                                        <th>Event Type</th>
+                                        <th>Queue</th>
+                                        <th>Status</th>
+                                        <th>Consumed At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for event in events %}
+                                    <tr>
+                                        <td><strong>{{ event.event_type }}</strong></td>
+                                        <td>{{ event.queue_name }}</td>
+                                        <td><span class="status-badge status-{{ event.ack_status }}">{{ event.ack_status
+                                                }}</span></td>
+                                        <td>{{ event.consumed_at }}</td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="4" class="empty-cell">No events found matching the filters</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="pagination">
+                            {% if page > 1 %}
+                            <a href="{{ url_for('subscriber_history', queue=current_queue_filter, type=current_type_filter, page=page-1) }}"
+                                class="btn-pagination">← Previous</a>
+                            {% endif %}
+                            <span class="page-info">Page {{ page }}</span>
+                            {% if has_next %}
+                            <a href="{{ url_for('subscriber_history', queue=current_queue_filter, type=current_type_filter, page=page+1) }}"
+                                class="btn-pagination">Next →</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

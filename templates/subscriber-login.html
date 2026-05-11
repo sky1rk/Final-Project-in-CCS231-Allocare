@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriber Log In | Allocare</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="brand-panel">
+            <div class="grain"></div>
+            <div class="brand-copy">
+                <div class="eyebrow-row">
+                    <img class="brand-logo-inline" src="{{ url_for('static', filename='img/logo-allocare.png') }}" alt="Allocare logo">
+                    <p class="eyebrow">Allocare</p>
+                </div>
+                <h1>Real-time event monitoring.</h1>
+                <p>Subscribe to healthcare events and receive critical alerts on capacity, admissions, and staffing.</p>
+            </div>
+        </section>
+        <section class="form-panel">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="notice notice-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="card reveal">
+                <h2>Subscriber login</h2>
+                <p class="subhead">Access real-time healthcare event monitoring.</p>
+                <form method="post" class="stack">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" autocomplete="username" required>
+
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+                    <button type="submit">Log In</button>
+                </form>
+                <p class="helper">Don't have an account? <a href="{{ url_for('subscriber_signup') }}">Create one</a>.</p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
