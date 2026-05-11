@@ -1,0 +1,577 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+:root {
+    --page-bg: #f7fbfe;
+    --panel-bg: #ffffff;
+    --hero-top: #c8eaf8;
+    --hero-mid: #eef8fc;
+    --hero-bottom: #9fd7ea;
+    --text: #233242;
+    --muted: #5f6f82;
+    --line: rgba(35, 50, 66, 0.12);
+    --shadow: 0 26px 60px rgba(23, 40, 58, 0.14);
+    --shadow-soft: 0 20px 46px rgba(23, 40, 58, 0.12);
+    --accent: #87c8df;
+    --accent-deep: #5fb7d5;
+    --success: #228b22;
+    --error: #d74343;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    color: var(--text);
+    background: #ffffff;
+    overflow-x: hidden;
+}
+
+.page-shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(440px, 0.98fr);
+}
+
+.brand-panel {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(2.5rem, 4vw, 4.5rem);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 28% 16%, rgba(255, 255, 255, 0.95) 0 18%, rgba(255, 255, 255, 0) 42%),
+        radial-gradient(circle at 28% 84%, rgba(255, 255, 255, 0.65) 0 10%, rgba(255, 255, 255, 0) 34%),
+        linear-gradient(160deg, var(--hero-top) 0%, var(--hero-mid) 42%, var(--hero-bottom) 100%);
+}
+
+.brand-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.55) 0 2px, transparent 3px),
+        radial-gradient(circle at 20% 22%, rgba(255, 255, 255, 0.5) 0 2px, transparent 3px),
+        radial-gradient(circle at 84% 80%, rgba(255, 255, 255, 0.4) 0 2px, transparent 3px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.brand-glow {
+    position: absolute;
+    inset: auto auto -10% 8%;
+    width: 66%;
+    height: 66%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0) 68%);
+    filter: blur(10px);
+    pointer-events: none;
+}
+
+.grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+    background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.14) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2));
+    pointer-events: none;
+}
+
+.brand-copy {
+    position: relative;
+    max-width: 560px;
+    padding-top: clamp(4rem, 12vh, 8rem);
+    z-index: 1;
+}
+
+.brand-copy h1 {
+    margin: 0;
+    max-width: 9ch;
+    font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
+    font-size: clamp(2.8rem, 5.6vw, 5.15rem);
+    line-height: 0.96;
+    letter-spacing: -0.05em;
+}
+
+.hero-text {
+    margin: 1.4rem 0 0;
+    max-width: 26rem;
+    line-height: 1.45;
+    font-size: clamp(1.02rem, 1.4vw, 1.26rem);
+    color: rgba(35, 50, 66, 0.9);
+}
+
+.eyebrow {
+    margin: 0 0 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
+    font-size: 1.06rem;
+    font-weight: 800;
+    color: rgba(35, 50, 66, 0.92);
+}
+
+.eyebrow-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+}
+
+.eyebrow-row .eyebrow {
+    margin: 0;
+}
+
+.brand-logo-inline {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+    display: block;
+}
+
+.brand-art {
+    position: absolute;
+    inset: auto 0 0;
+    height: min(40vh, 370px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.86;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.35) 72%, rgba(255, 255, 255, 0.78) 100%),
+        radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.92) 0 6%, transparent 7%),
+        radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.45) 0 16%, transparent 17%),
+        radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.22) 0 24%, transparent 25%);
+}
+
+.brand-art::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0) 0 14px, rgba(255, 255, 255, 0.28) 14px 15px, rgba(255, 255, 255, 0) 15px 56px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0) 0 46%, rgba(255, 255, 255, 0.48) 46% 47%, rgba(255, 255, 255, 0) 47% 100%);
+    opacity: 0.22;
+    clip-path: polygon(0 66%, 8% 66%, 10% 62%, 17% 62%, 18% 56%, 28% 56%, 30% 50%, 40% 50%, 43% 42%, 58% 42%, 60% 36%, 70% 36%, 72% 28%, 82% 28%, 84% 20%, 100% 20%, 100% 100%, 0 100%);
+}
+
+.art-ring,
+.art-core,
+.art-line,
+.art-node {
+    position: absolute;
+    display: block;
+}
+
+.art-ring {
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    left: 50%;
+    top: 58%;
+    transform: translate(-50%, -50%);
+}
+
+.art-ring-large {
+    width: 17rem;
+    height: 17rem;
+    box-shadow: 0 0 0 18px rgba(255, 255, 255, 0.16);
+}
+
+.art-ring-medium {
+    width: 12.5rem;
+    height: 12.5rem;
+    border-color: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 0 0 11px rgba(255, 255, 255, 0.12);
+}
+
+.art-ring-small {
+    width: 7.8rem;
+    height: 7.8rem;
+    box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.16);
+}
+
+.art-core {
+    left: 50%;
+    top: 58%;
+    width: 5rem;
+    height: 5rem;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 44%, #ffffff 0 28%, rgba(255, 255, 255, 0.9) 29% 38%, rgba(255, 255, 255, 0.18) 39% 70%, rgba(255, 255, 255, 0) 71%);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.55);
+}
+
+.art-line {
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0));
+    opacity: 0.95;
+}
+
+.art-line-a {
+    width: 34%;
+    left: 8%;
+    bottom: 33%;
+    transform: rotate(-12deg);
+}
+
+.art-line-b {
+    width: 27%;
+    right: 9%;
+    bottom: 36%;
+    transform: rotate(14deg);
+}
+
+.art-line-c {
+    width: 52%;
+    left: 24%;
+    bottom: 21%;
+    transform: rotate(3deg);
+}
+
+.art-node {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.art-node-a { left: 18%; bottom: 32%; }
+.art-node-b { left: 32%; bottom: 26%; }
+.art-node-c { right: 26%; bottom: 33%; }
+.art-node-d { right: 38%; bottom: 18%; }
+
+.form-panel {
+    padding: clamp(1.2rem, 2vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    background: transparent;
+}
+
+.notice {
+    width: min(480px, 100%);
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    border: 1px solid var(--line);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 24px rgba(23, 40, 58, 0.08);
+}
+
+.auth-card {
+    width: min(520px, 100%);
+    background: #ffffff;
+    border: none;
+    border-radius: 28px;
+    padding: 2.5rem 2.25rem 2rem;
+    box-shadow: 0 12px 48px rgba(18, 36, 56, 0.08);
+}
+
+/* Make primary auth buttons fill the card and match design */
+.auth-footer > button {
+    width: 100%;
+    padding: 1.12rem 1.2rem;
+    font-size: 1.05rem;
+    border-radius: 36px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #9fd9e8 0%, #86c8dc 35%, #78c0d6 100%);
+    box-shadow: 0 18px 30px rgba(34, 125, 160, 0.18), 0 0 0 1px rgba(255,255,255,0.35) inset;
+}
+
+/* Ensure other small buttons remain compact */
+button:not(.auth-footer > button) {
+    padding: 0.6rem 0.9rem;
+    border-radius: 999px;
+}
+
+/* Inputs and typography adjustments for a closer visual match */
+.auth-header h2 {
+    font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+}
+
+input {
+    padding: 1rem 3rem 1rem 1rem;
+    font-size: 1rem;
+}
+
+.helper, .fine-print { font-size: 0.98rem; }
+
+/* Decorative, subtle spiral on brand panel */
+.art-spiral {
+    position: absolute;
+    left: 6%;
+    top: 12%;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: conic-gradient(from 120deg at 50% 50%, rgba(255,255,255,0.06) 0 2%, rgba(255,255,255,0.0) 2% 8%, rgba(255,255,255,0.06) 8% 10%, rgba(255,255,255,0.0) 10% 16%, rgba(255,255,255,0.06) 16% 18%, rgba(255,255,255,0.0) 18% 24%);
+    opacity: 0.14;
+    transform: rotate(12deg) scale(1.02);
+    filter: blur(6px) saturate(1.02);
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+/* Slightly tighten the card on small screens so buttons stay full width */
+@media (max-width: 600px) {
+    .auth-card { padding: 1.4rem 1rem 1.2rem; border-radius: 22px; }
+    .art-spiral { display: none; }
+}
+
+.auth-header h2 {
+    margin: 0;
+    font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
+    font-size: clamp(1.9rem, 2.2vw, 2.3rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+}
+
+.auth-header p {
+    margin: 0.7rem 0 0;
+    font-size: 1.02rem;
+    line-height: 1.55;
+    color: var(--muted);
+}
+
+.auth-form {
+    margin-top: 1.55rem;
+    display: grid;
+    gap: 0.95rem;
+}
+
+.field {
+    position: relative;
+}
+
+input {
+    width: 100%;
+    border: 1px solid #d9e3f1;
+    border-radius: 16px;
+    padding: 0.95rem 3rem 0.95rem 1rem;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--text);
+    background: #eef4fc;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+input:focus {
+    border-color: rgba(95, 183, 213, 0.9);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(95, 183, 213, 0.15);
+}
+
+button {
+    margin-top: 0;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.95rem 1.15rem;
+    font: inherit;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(90deg, #91d0e3 0%, #a2d8e8 45%, #8ccfe1 100%);
+    box-shadow: 0 16px 26px rgba(95, 183, 213, 0.24), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+    outline: 3px solid rgba(95, 183, 213, 0.22);
+    outline-offset: 2px;
+}
+
+.field-icon {
+    position: absolute;
+    right: 0.95rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: rgba(95, 111, 130, 0.92);
+    box-shadow: none;
+}
+
+.field-icon:hover {
+    transform: translateY(-50%);
+    color: var(--text);
+    background: rgba(131, 170, 193, 0.12);
+}
+
+.field-icon svg {
+    width: 1.15rem;
+    height: 1.15rem;
+}
+
+.field-icon .icon-hide {
+    display: none;
+}
+
+.field-icon.is-visible .icon-show {
+    display: none;
+}
+
+.field-icon.is-visible .icon-hide {
+    display: block;
+}
+
+.stack,
+.auth-footer {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.auth-footer {
+    margin-top: 0.95rem;
+    justify-items: center;
+}
+
+.helper,
+.fine-print {
+    margin: 0;
+    text-align: center;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+a {
+    color: #2a6679;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.helper a,
+.fine-print a {
+    color: #2b7288;
+}
+
+.helper a:hover,
+.fine-print a:hover {
+    text-decoration: underline;
+}
+
+.notice-success {
+    background: rgba(34, 139, 34, 0.1);
+    color: var(--success);
+}
+
+.notice-error {
+    background: rgba(215, 67, 67, 0.1);
+    color: var(--error);
+}
+
+.dashboard {
+    min-height: 100vh;
+    width: min(680px, calc(100% - 2rem));
+    margin: 0 auto;
+    display: grid;
+    align-content: center;
+    gap: 0.7rem;
+}
+
+.dashboard h1 {
+    margin: 0;
+    font-size: clamp(2rem, 8vw, 3.2rem);
+}
+
+.reveal {
+    animation: float-in 0.7s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.delay-1 {
+    animation-delay: 0.12s;
+    animation-fill-mode: both;
+}
+
+@keyframes float-in {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 900px) {
+    .page-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .brand-panel {
+        min-height: 52vh;
+        padding: 2.1rem 1.3rem 1.2rem;
+    }
+
+    .brand-copy {
+        padding-top: 2rem;
+    }
+
+    .brand-copy h1 {
+        max-width: 12ch;
+        font-size: clamp(2.4rem, 11vw, 4rem);
+    }
+
+    .brand-art {
+        height: 34vh;
+    }
+
+    .form-panel {
+        justify-content: flex-start;
+        padding: 1.2rem;
+    }
+
+    .auth-card,
+    .notice {
+        width: 100%;
+    }
+}
+
+@media (max-width: 540px) {
+    .auth-card {
+        padding: 1.45rem 1.1rem 1.25rem;
+        border-radius: 22px;
+    }
+
+    .auth-header h2 {
+        font-size: 1.75rem;
+    }
+
+    input {
+        padding-right: 2.75rem;
+    }
+}
