@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient | Allocare</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/patient-admission.css') }}">
+</head>
+
+<body>
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom-dropdowns.js') }}"></script>
+    <input type="checkbox" id="sidebar-toggle">
+    <label for="sidebar-toggle" class="sidebar-toggle-label" aria-label="Toggle navigation">☰</label>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-mark" aria-hidden="true">
+                    <img src="{{ url_for('static', filename='img/logo-allocare.png') }}" alt="Allocare logo">
+                </div>
+                <div>
+                    <p class="eyebrow">Allocare</p>
+                    <h3>Publisher</h3>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('publisher_dashboard') }}"
+                    class="nav-link {% if request.endpoint == 'publisher_dashboard' %}active{% endif %}">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7" rx="1.8" />
+                            <rect x="14" y="3" width="7" height="7" rx="1.8" />
+                            <rect x="3" y="14" width="7" height="7" rx="1.8" />
+                            <rect x="14" y="14" width="7" height="7" rx="1.8" />
+                        </svg>
+                    </span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="{{ url_for('patient_admission') }}"
+                    class="nav-link {% if request.endpoint == 'patient_admission' %}active{% endif %}">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                    </span>
+                    <span class="nav-label">Add Patient</span>
+                </a>
+                <a href="{{ url_for('bed_management') }}"
+                    class="nav-link {% if request.endpoint == 'bed_management' %}active{% endif %}">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                    </span>
+                    <span class="nav-label">Bed Management</span>
+                </a>
+                <a href="{{ url_for('doctor_registration') }}"
+                    class="nav-link {% if request.endpoint == 'doctor_registration' %}active{% endif %}">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </span>
+                    <span class="nav-label">Doctor Registration</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <form method="post" action="{{ url_for('logout') }}">
+                    <button type="submit" class="logout-btn">
+                        <span class="nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                        </span>
+                        <span class="nav-label">Log Out</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="notice notice-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class="page-container">
+                <section class="admission-card">
+                    <div class="admission-stepper" aria-label="Patient admission steps">
+                        <span class="step current" data-step="1"><strong>1</strong><small>Patient Info</small></span>
+                        <span class="step" data-step="2"><strong>2</strong><small>Triage</small></span>
+                        <span class="step" data-step="3"><strong>3</strong><small>Details</small></span>
+                        <span class="step" data-step="4"><strong>4</strong><small>Review</small></span>
+                    </div>
+
+                    <div class="page-header">
+                        <h1>Patient Admission</h1>
+                        <p class="page-subtitle">Admit patients to the system.</p>
+                    </div>
+
+                    <form method="post" class="admission-form" data-admission-form>
+                        <div class="form-step is-active" data-step-panel="1">
+                            <div class="form-grid form-grid-first">
+                                <div class="form-group">
+                                    <label for="patient_id">Patient ID</label>
+                                    <input type="text" id="patient_id" name="patient_id" placeholder="Patient ID"
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="patient_name">Patient Name (Optional)</label>
+                                    <input type="text" id="patient_name" name="patient_name"
+                                        placeholder="Patient Name (Optional)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-step" data-step-panel="2">
+                            <div class="form-grid form-grid-first">
+                                <div class="form-group">
+                                    <label for="severity">Severity Level</label>
+                                    <select id="severity" name="severity" required>
+                                        <option value="">Severity Level</option>
+                                        <option value="low">Low - Stable condition</option>
+                                        <option value="medium">Medium - Monitoring required</option>
+                                        <option value="high">High - Urgent care needed</option>
+                                        <option value="critical">Critical - ICU required</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="facility_unit">Requested Facility Unit</label>
+                                    <select id="facility_unit" name="facility_unit" required>
+                                        <option value="">Requested Facility Unit</option>
+                                        <option value="general-ward">General Ward</option>
+                                        <option value="high-dependency">High Dependency Unit</option>
+                                        <option value="icu">Intensive Care Unit</option>
+                                        <option value="emergency">Emergency Department</option>
+                                        <option value="pediatrics">Pediatrics</option>
+                                        <option value="maternity">Maternity</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-step" data-step-panel="3">
+                            <div class="form-grid form-grid-secondary">
+                                <div class="form-group full-width">
+                                    <label for="admission_notes">Admission Notes (Optional)</label>
+                                    <textarea id="admission_notes" name="admission_notes"
+                                        placeholder="Admission Notes (Optional)" rows="6"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-step" data-step-panel="4">
+                            <div class="review-grid">
+                                <div class="review-item">
+                                    <span class="review-label">Patient ID</span>
+                                    <strong data-review="patient_id">-</strong>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Patient Name</span>
+                                    <strong data-review="patient_name">-</strong>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Severity</span>
+                                    <strong data-review="severity">-</strong>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Facility Unit</span>
+                                    <strong data-review="facility_unit">-</strong>
+                                </div>
+                                <div class="review-item review-notes">
+                                    <span class="review-label">Admission Notes</span>
+                                    <strong data-review="admission_notes">-</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" data-prev>Back</button>
+                            <button type="button" class="btn-submit" data-next>Next</button>
+                            <button type="submit" class="btn-submit is-hidden" data-submit>Submit</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script>
+        const form = document.querySelector("[data-admission-form]");
+        const panels = Array.from(document.querySelectorAll("[data-step-panel]"));
+        const steps = Array.from(document.querySelectorAll(".admission-stepper .step"));
+        const nextBtn = document.querySelector("[data-next]");
+        const prevBtn = document.querySelector("[data-prev]");
+        const submitBtn = document.querySelector("[data-submit]");
+        const reviewFields = document.querySelectorAll("[data-review]");
+        let currentStep = 1;
+
+        const requiredByStep = {
+            1: ["patient_id"],
+            2: ["severity", "facility_unit"],
+            3: [],
+            4: []
+        };
+
+        const toTitle = (value) => value.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+        const updateReview = () => {
+            reviewFields.forEach((field) => {
+                const key = field.getAttribute("data-review");
+                const input = form.querySelector(`[name="${key}"]`);
+                if (!input) {
+                    field.textContent = "-";
+                    return;
+                }
+                const value = input.value.trim();
+                if (!value) {
+                    field.textContent = "-";
+                } else if (key === "facility_unit") {
+                    field.textContent = toTitle(value);
+                } else if (key === "severity") {
+                    field.textContent = toTitle(value);
+                } else {
+                    field.textContent = value;
+                }
+            });
+        };
+
+        const setStep = (step) => {
+            currentStep = step;
+            panels.forEach((panel) => {
+                panel.classList.toggle("is-active", panel.getAttribute("data-step-panel") === String(step));
+            });
+            steps.forEach((stepEl) => {
+                const stepIndex = Number(stepEl.getAttribute("data-step"));
+                stepEl.classList.toggle("current", stepIndex === step);
+                stepEl.classList.toggle("completed", stepIndex < step);
+            });
+            prevBtn.disabled = step === 1;
+            nextBtn.classList.toggle("is-hidden", step === 4);
+            submitBtn.classList.toggle("is-hidden", step !== 4);
+            if (step === 4) {
+                updateReview();
+            }
+        };
+
+        const validateStep = () => {
+            const requiredFields = requiredByStep[currentStep] || [];
+            for (const name of requiredFields) {
+                const input = form.querySelector(`[name="${name}"]`);
+                if (input && !input.value.trim()) {
+                    input.focus();
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        nextBtn.addEventListener("click", () => {
+            if (!validateStep()) {
+                return;
+            }
+            setStep(Math.min(currentStep + 1, 4));
+        });
+
+        prevBtn.addEventListener("click", () => {
+            setStep(Math.max(currentStep - 1, 1));
+        });
+
+        form.addEventListener("submit", () => {
+            updateReview();
+        });
+
+        setStep(1);
+    </script>
+</body>
+
+</html>
