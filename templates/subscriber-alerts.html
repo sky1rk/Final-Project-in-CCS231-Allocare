@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerts | Allocare Subscriber</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/subscriber-alerts.css') }}">
+</head>
+
+<body>
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+    <input type="checkbox" id="sidebar-toggle">
+    <label for="sidebar-toggle" class="sidebar-toggle-label">☰</label>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-mark" aria-hidden="true">
+                    <img src="{{ url_for('static', filename='img/logo-allocare.png') }}" alt="Allocare logo">
+                </div>
+                <div>
+                    <p class="eyebrow">Allocare</p>
+                    <p class="sidebar-subtitle">Real-time resource allocation.</p>
+                    <h3>Subscriber</h3>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('subscriber_dashboard') }}"
+                    class="nav-link {% if request.endpoint == 'subscriber_dashboard' %}active{% endif %}">
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="{{ url_for('subscriber_alerts') }}"
+                    class="nav-link {% if request.endpoint == 'subscriber_alerts' %}active{% endif %}">
+                    <span class="nav-label">Alerts</span>
+                </a>
+                <a href="{{ url_for('subscriber_history') }}"
+                    class="nav-link {% if request.endpoint == 'subscriber_history' %}active{% endif %}">
+                    <span class="nav-label">Event History</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <form method="post" action="{{ url_for('subscriber_logout') }}">
+                    <button type="submit" class="logout-btn">
+                        <span class="nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                        </span>
+                        <span class="nav-label">Log Out</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="notice notice-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class="page-container">
+                <section class="hero-card">
+                    <div>
+                        <p class="eyebrow">Critical & Urgent Matters</p>
+                        <h1>Alert Dashboard</h1>
+                        <p class="page-subtitle">Monitor critical alerts requiring immediate attention.</p>
+                    </div>
+                    <div class="hero-meta">
+                        <span class="meta-label">Active Alerts</span>
+                        <strong class="alert-count">{{ severity_counts.get('critical', 0) +
+                            severity_counts.get('warning', 0) }}</strong>
+                    </div>
+                </section>
+
+                <section class="alert-stats">
+                    <article class="alert-stat critical">
+                        <strong>{{ severity_counts.get('critical', 0) }}</strong>
+                        <span>Critical</span>
+                    </article>
+                    <article class="alert-stat warning">
+                        <strong>{{ severity_counts.get('warning', 0) }}</strong>
+                        <span>Warning</span>
+                    </article>
+                    <article class="alert-stat info">
+                        <strong>{{ severity_counts.get('info', 0) }}</strong>
+                        <span>Info</span>
+                    </article>
+                </section>
+
+                <section class="alerts-container">
+                    {% for alert in alerts %}
+                    <div class="alert-card alert-{{ alert.severity }}">
+                        <div class="alert-header">
+                            <div class="alert-title-group">
+                                <strong>{{ alert.title }}</strong>
+                                <span class="alert-type">{{ alert.alert_type }}</span>
+                            </div>
+                            <span class="alert-badge alert-badge-{{ alert.severity }}">{{ alert.severity|upper }}</span>
+                        </div>
+                        <p class="alert-description">{{ alert.description }}</p>
+                        <time class="alert-time">{{ alert.created_at }}</time>
+                    </div>
+                    {% else %}
+                    <div class="empty-state-container">
+                        <p class="empty-state">No active alerts - All systems operating normally</p>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <section class="alert-legend">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2>Alert Types & Severity Levels</h2>
+                        </div>
+                        <ul class="legend-list">
+                            <li><span class="badge critical">CRITICAL</span> - Requires immediate action (critical
+                                patients, full capacity)</li>
+                            <li><span class="badge warning">WARNING</span> - Requires attention (doctor off duty, high
+                                occupancy)</li>
+                            <li><span class="badge info">INFO</span> - For informational purposes (routine updates,
+                                non-urgent changes)</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
